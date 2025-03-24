@@ -25,6 +25,11 @@
   --color-midnight-black: #171823;
   --background: #ffffff;
   --foreground: #171717;
+
+  --hero-desktop-dark: "url('../../public/bg-desktop-dark.jpg')";
+  --hero-desktop-light: "url('../../public/bg-desktop-light.jpg')";
+  --hero-mobile-dark: "url('../../public/bg-mobile-dark.jpg')";
+  --hero-mobile-light: "url('../../public/bg-mobile-light.jpg')";
 }
 
 html,
