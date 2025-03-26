@@ -26,10 +26,11 @@
   --background: #ffffff;
   --foreground: #171717;
 
-  --hero-desktop-dark: "url('public/bg-desktop-dark.jpg')";
-  --hero-desktop-light: "url('public/bg-desktop-light.jpg')";
-  --hero-mobile-dark: "url('public/bg-mobile-dark.jpg')";
-  --hero-mobile-light: "url('public/bg-mobile-light.jpg')";
+
+  --hero-desktop-dark: url('/bg-desktop-dark.jpg');
+  --hero-desktop-light: url('/bg-desktop-light.jpg');
+  --hero-mobile-dark: url('/bg-mobile-dark.jpg');
+  --hero-mobile-light: url('/bg-mobile-light.jpg');
 }
 
 html,
@@ -56,51 +57,49 @@ body {
   @apply flex justify-center items-center
 }
 
-@layer components {
-  .max-container {
-    max-width: 1440px;
-    margin: 0 auto;
-  }
+.max-container {
+  max-width: 1440px;
+  margin: 0 auto;
+}
 
-  .checkbox-round {
-    width: 26px;
-    height: 26px;
-    background-color: transparent;
-    border-radius: 50%;
-    vertical-align: middle;
-    border: 1px solid var(--color-pale-grey);
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    cursor: pointer;
-    text-align: center;
-    line-height: 26px;
-    vertical-align: middle;
-  }
+.checkbox-round {
+  width: 26px;
+  height: 26px;
+  background-color: transparent;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 1px solid var(--color-pale-grey);
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  line-height: 26px;
+  vertical-align: middle;
+}
 
-  .checkbox-round:hover {
-    border: 1px solid #55ddff;
-  }
+.checkbox-round:hover {
+  border: 1px solid #55ddff;
+}
 
-  /* https://cssgradient.io/ */
-  .checkbox-round:checked {
-    background: var(--light-linear-gradient);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#55ddff", endColorstr="#c058f3", GradientType=1);
-  }
+/* https://cssgradient.io/ */
+.checkbox-round:checked {
+  background: var(--light-linear-gradient);
+  filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#55ddff", endColorstr="#c058f3", GradientType=1);
+}
 
-  .checkbox-round:checked+label {
-    text-decoration: line-through;
-    color: var(--color-light-grey);
-  }
+.checkbox-round:checked+label {
+  text-decoration: line-through;
+  color: var(--color-light-grey);
+}
 
-  .checkbox-round:checked::before {
-    content: " ";
-    display: inline-block;
-    color: var(--color-white);
-    transform: rotate(45deg);
-    height: 12px;
-    width: 6px;
-    border-bottom: 2px solid var(--color-white);
-    border-right: 2px solid var(--color-white);
-  }
+.checkbox-round:checked::before {
+  content: " ";
+  display: inline-block;
+  color: var(--color-white);
+  transform: rotate(45deg);
+  height: 12px;
+  width: 6px;
+  border-bottom: 2px solid var(--color-white);
+  border-right: 2px solid var(--color-white);
 }
