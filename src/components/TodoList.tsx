@@ -96,7 +96,7 @@ export default function TodoList() {
         <label htmlFor="listInput" className="relative mb-8 block">
           <OvalIcon />
           <input
-            className="w-full max-w-full py-[23px] pr-5 pl-[47px] shadow-paleWhite rounded-[5px] placeholder:text-darkGrey"
+            className="w-full max-w-full py-[23px] pr-5 pl-[47px] shadow-paleWhite rounded-[5px] placeholder:text-dark-grey"
             type="text"
             onChange={handleTodoItemChange}
             value={todoLisItem}
