@@ -92,11 +92,11 @@ export default function TodoList() {
 
   return (
     <>
-      <form className="w-[540px] h-[540px] my-0 mx-auto" onSubmit={submitTodoData}>
+      <form className="w-[540px] h-[540px]  m-auto" onSubmit={submitTodoData}>
         <label htmlFor="listInput" className="relative mb-8 block">
           <OvalIcon />
           <input
-            className="w-full max-w-full py-[23px] pr-5 pl-[47px] shadow-paleWhite rounded-[5px] placeholder:text-dark-grey"
+            className="w-full max-w-full py-[23px] pr-5 pl-[47px] shadow-(--light-box-shadow) rounded-[5px] placeholder:text-dark-grey"
             type="text"
             onChange={handleTodoItemChange}
             value={todoLisItem}
@@ -105,7 +105,7 @@ export default function TodoList() {
             placeholder="Create a new todo item..."
           />
         </label>
-        <div className="w-full h-full max-w-full bg-white rounded-[5px] shadow-paleWhite">
+        <div className="w-full h-full max-w-full bg-white rounded-[5px] shadow-(--light-box-shadow)">
           <div className="h-[85%] overflow-y-auto min-h-[auto]">
             {addListItems.map((item, index) => (
               <>
