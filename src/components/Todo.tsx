@@ -9,7 +9,7 @@ export default function Todo() {
         <TodoList />
       </div>
       <div className="text-center">
-        <p className="text-sm leading-normal font-normal not-italic -tracking[0.194px] text-shadeGrey">
+        <p className="text-sm leading-normal font-normal not-italic -tracking[0.194px] text-shade-grey">
           Drag and drop to reorder list
         </p>
       </div>

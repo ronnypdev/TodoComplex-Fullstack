@@ -92,11 +92,11 @@ export default function TodoList() {
 
   return (
     <>
-      <form className="w-[540px] h-[540px]  m-auto" onSubmit={submitTodoData}>
+      <form className="w-[540px] h-[540px] m-auto" onSubmit={submitTodoData}>
         <label htmlFor="listInput" className="relative mb-8 block">
           <OvalIcon />
           <input
-            className="w-full max-w-full py-[23px] pr-5 pl-[47px] shadow-(--light-box-shadow) rounded-[5px] placeholder:text-dark-grey"
+            className="w-full max-w-full py-[23px] pr-5 pl-[47px] bg-white shadow-(--light-box-shadow) rounded-[5px] placeholder:text-shade-grey"
             type="text"
             onChange={handleTodoItemChange}
             value={todoLisItem}
@@ -111,7 +111,7 @@ export default function TodoList() {
               <>
                 {filter === "All" && (
                   <div key={item.id}
-                    className={`p-6 ${index === 0 ? "border-t first:border-0" : "border-t border-t-lightGrey"}
+                    className={`p-6 ${index === 0 ? "border-t first:border-0" : "border-t border-t-light-grey"}
                     flex justify-between items-center group/controls`}
                   >
                     <div className="todo-flex-col">
@@ -148,7 +148,7 @@ export default function TodoList() {
                 }
                 {filter === "Active" && !item.completed && (
                   <div key={item.id}
-                    className={`p-6 ${index === 0 ? "border-t first:border-0" : "border-t border-t-lightGrey"}
+                    className={`p-6 ${index === 0 ? "border-t first:border-0" : "border-t border-t-light-grey"}
                     flex justify-between items-center group/controls`}
                   >
                     <div className="todo-flex-col">
@@ -182,7 +182,7 @@ export default function TodoList() {
                 }
                 {filter === "Completed" && item.completed && (
                   <div key={item.id}
-                    className={`p-6 ${index === 0 ? "border-t first:border-0" : "border-t border-t-lightGrey"}
+                    className={`p-6 ${index === 0 ? "border-t first:border-0" : "border-t border-t-light-grey"}
                     flex justify-between items-center group/controls`}
                   >
                     <div className="todo-flex-col">
@@ -218,26 +218,26 @@ export default function TodoList() {
             ))}
           </div>
 
-          <div className="controls border-t border-t-lightGrey h-[15%] flex justify-between items-center px-[14px]">
-            <p className="text-shadeGrey"><span>{addListItems.length}</span> items left</p>
+          <div className="controls border-t border-t-light-grey h-[15%] flex justify-between items-center px-[14px]">
+            <p className="text-shade-grey"><span>{addListItems.length}</span> items left</p>
               <ul className="flex justify-between items-center">
                 {addListItems.length > 0 && addListItems[0].filterNames ? (
                   addListItems[0].filterNames.map((filterItem, index) => (
                     <li
                       key={index}
-                      className={`ml-4 cursor-pointer text-primaryBlue ${index === isActiveIndex ? "text-primaryBlue" : "text-shadeGrey"}`}
+                      className={`ml-4 cursor-pointer text-primary-blue ${index === isActiveIndex ? "text-primary-blue" : "text-shade-grey"}`}
                       onClick={() => toggleActive(index, filterItem)}
                     >{filterItem}</li>
                   ))
                 ) : (
                   <>
-                    <li className="ml-4 cursor-pointer text-primaryBlue">All</li>
-                    <li className="ml-4 cursor-pointer text-shadeGrey">Active</li>
-                    <li className="ml-4 cursor-pointer text-shadeGrey">Completed</li>
+                    <li className="ml-4 cursor-pointer text-primary-blue">All</li>
+                    <li className="ml-4 cursor-pointer text-shade-grey">Active</li>
+                    <li className="ml-4 cursor-pointer text-shade-grey">Completed</li>
                   </>
                 )}
               </ul>
-            <p className="text-shadeGrey cursor-pointer" onClick={() => uncheckItems()}>Clear Completed</p>
+            <p className="text-shade-grey cursor-pointer" onClick={() => uncheckItems()}>Clear Completed</p>
           </div>
         </div>
       </form>

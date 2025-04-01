@@ -25,7 +25,7 @@ export default function TodoListItem({
         name={itemName}
         onChange={(e) => todoListItemData(itemIndexValue, e)}
       /> :
-          <label className="cursor-pointer" htmlFor={itemId}>{itemValue}</label>}
+          <label className="cursor-pointer text-mid-grey" htmlFor={itemId}>{itemValue}</label>}
     </>
   )
 }
