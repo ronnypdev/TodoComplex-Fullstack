@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { nanoid } from 'nanoid';
 
 import CrossIcon from './icons/CrossIcon';
 import OvalIcon from './icons/OvalIcon';
@@ -9,13 +8,7 @@ import PencilIcon from './icons/PencilIcon';
 
 import TodoListItem from './TodoListItem';
 
-type TodoList = {
-  id: string;
-  listItem: string;
-  completed: boolean;
-  reveal: boolean;
-  filterNames: string[];
-};
+import { addItem } from '@/lib/utils/actions';
 
 export default function TodoList() {
   const [todoLisItem, setTodoListItem] = useState<string>('');
@@ -28,17 +21,10 @@ export default function TodoList() {
     setTodoListItem(event.target.value);
   }
 
-  function addTodoItem() {
-    setListItems([
-      ...listItems,
-      {
-        id: nanoid(),
-        listItem: todoLisItem,
-        completed: false,
-        reveal: false,
-        filterNames: ['All', 'Active', 'Completed'],
-      },
-    ]);
+  async function addTodoItem() {
+    const addedItem = await addItem(todoLisItem);
+
+    setListItems([...listItems, addedItem]);
     setTodoListItem('');
   }
 

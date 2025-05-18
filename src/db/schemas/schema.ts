@@ -11,4 +11,5 @@ export const listItemTable = pgTable('listitem', {
   created_at: timestamp('created_at').defaultNow(),
   updatedItem: varchar({ length: 255 }).notNull(),
   completed: boolean().default(false),
+  reveal: boolean().default(false),
 });
