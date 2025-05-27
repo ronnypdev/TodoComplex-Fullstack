@@ -1,10 +1,13 @@
 'use server';
 import { db } from '@/db';
 import { listItemTable } from '@/db/schemas/schema';
+import { TodoItemResult } from '@/types';
 
-export async function addItem(item: string) {
+export async function addItem(
+  item: string
+): Promise<TodoItemResult | { error: string }> {
   try {
-    if (!item) return;
+    if (!item) return { error: 'Item cannot be empty' };
 
     const itemAdded = await db
       .insert(listItemTable)

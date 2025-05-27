@@ -7,12 +7,12 @@ import OvalIcon from './icons/OvalIcon';
 import PencilIcon from './icons/PencilIcon';
 
 import TodoListItem from './TodoListItem';
-
+import { TodoItem } from '@/types';
 import { addItem } from '@/lib/utils/actions';
 
 export default function TodoList() {
   const [todoLisItem, setTodoListItem] = useState<string>('');
-  const [listItems, setListItems] = useState<TodoList[]>([]);
+  const [listItems, setListItems] = useState<TodoItem[]>([]);
   const [isActiveIndex, setIsActiveIndex] = useState<null | number>(null);
   const [filter, setFilter] = useState<string>('All');
   const [itemChecked, setItemChecked] = useState<boolean>(true);
@@ -22,10 +22,21 @@ export default function TodoList() {
   }
 
   async function addTodoItem() {
-    const addedItem = await addItem(todoLisItem);
+    try {
+      const addedItem = await addItem(todoLisItem);
 
-    setListItems([...listItems, addedItem]);
-    setTodoListItem('');
+      // Handle potential errors from the action
+      if (addedItem && !addedItem.error) {
+        setListItems([...listItems, addedItem as TodoItem]);
+        setTodoListItem('');
+      } else {
+        // Handle error case
+        console.error('Failed to add item:', addedItem?.error);
+      }
+    } catch (error) {
+      console.error('Failed to add user:', error);
+      return { error: 'Failed to add user. Please try again.' };
+    }
   }
 
   function removeTodoItem(index: number) {
