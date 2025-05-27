@@ -4,6 +4,7 @@ export interface TodoItem {
   completed: boolean;
   reveal: boolean;
   error?: string; // For error handling from the action
+  // filterNames?: string[];
 }
 
 export interface TodoItemResult extends TodoItem {
