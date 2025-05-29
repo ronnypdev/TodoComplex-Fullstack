@@ -8,7 +8,7 @@ import PencilIcon from './icons/PencilIcon';
 
 import TodoListItem from './TodoListItem';
 import { TodoItem } from '@/types';
-import { addItem } from '@/lib/utils/actions';
+import { addItem, fetchItems } from '@/lib/utils/actions';
 
 export default function TodoList() {
   const [todoLisItem, setTodoListItem] = useState<string>('');
@@ -43,7 +43,7 @@ export default function TodoList() {
     );
   }
 
-  function editTodoItem(itemId: string) {
+  function editTodoItem(itemId: number) {
     setListItems((prevListItems) =>
       prevListItems.map((item) =>
         item.id === itemId ? { ...item, reveal: !item.reveal } : item
@@ -66,7 +66,7 @@ export default function TodoList() {
   }
 
   function checkCompleteItem(
-    itemId: string,
+    itemId: number,
     event: React.ChangeEvent<HTMLInputElement>
   ) {
     const isChecked = event.target.checked;
@@ -120,9 +120,9 @@ export default function TodoList() {
                     <input
                       className="cursor-pointer checkbox-round relative right-[11px] bottom-[2px]"
                       type="checkbox"
-                      id={item.id}
+                      id={item.id.toString()}
                       checked={item.completed}
-                      name={item.id}
+                      name={item.updatedItem}
                       onChange={(event) => {
                         checkCompleteItem(item.id, event);
                         setItemChecked(!itemChecked);
@@ -131,9 +131,9 @@ export default function TodoList() {
                     <TodoListItem
                       itemReveal={item.reveal}
                       itemIndexValue={index}
-                      itemValue={item.listItem}
+                      itemValue={item.updatedItem}
                       itemId={item.id}
-                      itemName={item.id}
+                      itemName={item.updatedItem}
                       todoListItemData={updateTodoItem}
                     />
                   </div>
