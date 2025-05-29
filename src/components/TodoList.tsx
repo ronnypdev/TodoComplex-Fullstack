@@ -32,8 +32,27 @@ export default function TodoList() {
         console.error('Failed to add item:', addedItem?.error);
       }
     } catch (error) {
-      console.error('Failed to add user:', error);
-      return { error: 'Failed to add user. Please try again.' };
+      console.error('Failed to add item:', error);
+      return { error: 'Failed to add list item. Please try again.' };
+    }
+  }
+
+  async function getItems() {
+    try {
+      const newItems = await fetchItems();
+      setListItems((prevListItems) => [
+        ...prevListItems,
+        ...newItems.map((item) => ({
+          id: item.id,
+          updatedItem: item.updatedItem,
+          completed: item.completed ?? false,
+          reveal: item.reveal ?? false,
+          created_at: item.created_at,
+        })),
+      ]);
+    } catch (error) {
+      console.error('Failed to fetch item:', error);
+      return { error: 'Failed to fetch list item. Please try again.' };
     }
   }
 
@@ -81,6 +100,7 @@ export default function TodoList() {
     event.preventDefault();
     if (todoLisItem.trim() === '') return;
     addTodoItem();
+    getItems();
   }
 
   function clearCompletedItems() {
@@ -107,52 +127,50 @@ export default function TodoList() {
         <div className="w-full h-full max-w-full bg-white rounded-[5px] shadow-(--light-box-shadow)">
           <div className="h-[85%] overflow-y-auto min-h-[auto]">
             {listItems.map((item, index) => (
-              <>
-                <div
-                  key={item.id}
-                  className={`p-6 ${
-                    index === 0
-                      ? 'border-t first:border-0'
-                      : 'border-t border-t-light-grey'
-                  }
+              <div
+                key={item.id}
+                className={`p-6 ${
+                  index === 0
+                    ? 'border-t first:border-0'
+                    : 'border-t border-t-light-grey'
+                }
                     flex justify-between items-center group/controls`}>
-                  <div className="todo-flex-col">
-                    <input
-                      className="cursor-pointer checkbox-round relative right-[11px] bottom-[2px]"
-                      type="checkbox"
-                      id={item.id.toString()}
-                      checked={item.completed}
-                      name={item.updatedItem}
-                      onChange={(event) => {
-                        checkCompleteItem(item.id, event);
-                        setItemChecked(!itemChecked);
-                      }}
-                    />
-                    <TodoListItem
-                      itemReveal={item.reveal}
-                      itemIndexValue={index}
-                      itemValue={item.updatedItem}
-                      itemId={item.id}
-                      itemName={item.updatedItem}
-                      todoListItemData={updateTodoItem}
-                    />
-                  </div>
-                  <div className="hidden group-hover/controls:flex group-hover/controls:justify-center group-hover/controls:items-center">
-                    {!item.completed && (
-                      <PencilIcon
-                        fillColor="#494C6B"
-                        toggleOnClick={() => editTodoItem(item.id)}
-                        hoverState="hover:fill-midGrey cursor-pointer mr-2"
-                      />
-                    )}
-                    <CrossIcon
+                <div className="todo-flex-col">
+                  <input
+                    className="cursor-pointer checkbox-round relative right-[11px] bottom-[2px]"
+                    type="checkbox"
+                    id={item.id.toString()}
+                    checked={item.completed || false}
+                    name={item.updatedItem}
+                    onChange={(event) => {
+                      checkCompleteItem(item.id, event);
+                      setItemChecked(!itemChecked);
+                    }}
+                  />
+                  <TodoListItem
+                    itemReveal={item.reveal || false}
+                    itemIndexValue={index}
+                    itemValue={item.updatedItem}
+                    itemId={item.id}
+                    itemName={item.updatedItem}
+                    todoListItemData={updateTodoItem}
+                  />
+                </div>
+                <div className="hidden group-hover/controls:flex group-hover/controls:justify-center group-hover/controls:items-center">
+                  {!item.completed && (
+                    <PencilIcon
                       fillColor="#494C6B"
-                      toggleOnClick={() => removeTodoItem(index)}
+                      toggleOnClick={() => editTodoItem(item.id)}
                       hoverState="hover:fill-midGrey cursor-pointer mr-2"
                     />
-                  </div>
+                  )}
+                  <CrossIcon
+                    fillColor="#494C6B"
+                    toggleOnClick={() => removeTodoItem(index)}
+                    hoverState="hover:fill-midGrey cursor-pointer mr-2"
+                  />
                 </div>
-              </>
+              </div>
             ))}
           </div>
 

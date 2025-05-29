@@ -36,9 +36,14 @@ export async function addItem(
 export async function fetchItems(): Promise<TodoItemResult[]> {
   try {
     const items = await db.select().from(listItemTable);
-    return items;
+
+    return items.map((item) => ({
+      ...item,
+      completed: item.completed || false,
+      reveal: item.reveal || false,
+    }));
   } catch (error) {
     console.error('Failed to fetch items:', error);
-    return [];
+    throw new Error('Failed to fetch items from database');
   }
 }
