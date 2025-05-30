@@ -39,8 +39,8 @@ export async function fetchItems(): Promise<TodoItemResult[]> {
 
     return items.map((item) => ({
       ...item,
-      completed: item.completed || false,
-      reveal: item.reveal || false,
+      completed: item.completed ?? false,
+      reveal: item.reveal ?? false,
     }));
   } catch (error) {
     console.error('Failed to fetch items:', error);
