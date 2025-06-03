@@ -7,12 +7,12 @@ import OvalIcon from './icons/OvalIcon';
 import PencilIcon from './icons/PencilIcon';
 
 import TodoListItem from './TodoListItem';
-import { TodoItem } from '@/types';
-import { addItem, fetchItems } from '@/lib/utils/actions';
+import { TodoItem, TodoListProps } from '@/types';
+import { addItem } from '@/lib/utils/actions';
 
-export default function TodoList() {
+export default function TodoList({ initialItems }: TodoListProps) {
   const [todoLisItem, setTodoListItem] = useState<string>('');
-  const [listItems, setListItems] = useState<TodoItem[]>([]);
+  const [listItems, setListItems] = useState<TodoItem[]>(initialItems);
   const [itemChecked, setItemChecked] = useState<boolean>(true);
 
   function handleTodoItemChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -34,25 +34,6 @@ export default function TodoList() {
     } catch (error) {
       console.error('Failed to add item:', error);
       return { error: 'Failed to add list item. Please try again.' };
-    }
-  }
-
-  async function getItems() {
-    try {
-      const newItems = await fetchItems();
-      setListItems((prevListItems) => [
-        ...prevListItems,
-        ...newItems.map((item) => ({
-          id: item.id,
-          updatedItem: item.updatedItem,
-          completed: item.completed ?? false,
-          reveal: item.reveal ?? false,
-          created_at: item.created_at,
-        })),
-      ]);
-    } catch (error) {
-      console.error('Failed to fetch item:', error);
-      return { error: 'Failed to fetch list item. Please try again.' };
     }
   }
 
@@ -100,7 +81,6 @@ export default function TodoList() {
     event.preventDefault();
     if (todoLisItem.trim() === '') return;
     addTodoItem();
-    getItems();
   }
 
   function clearCompletedItems() {

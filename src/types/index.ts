@@ -14,3 +14,7 @@ export interface ActionResult<T> {
   data?: T;
   error?: string;
 }
+
+export interface TodoListProps {
+  initialItems: TodoItem[];
+}
