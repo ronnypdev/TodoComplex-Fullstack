@@ -7,8 +7,8 @@ import OvalIcon from './icons/OvalIcon';
 import PencilIcon from './icons/PencilIcon';
 
 import TodoListItem from './TodoListItem';
-import { TodoItem, TodoListProps } from '@/types';
-import { addItem } from '@/lib/utils/actions';
+import { TodoItem, TodoListProps, TodoItemResult } from '@/types';
+import { addItem, updateItem } from '@/lib/utils/actions';
 
 export default function TodoList({ initialItems }: TodoListProps) {
   const [todoLisItem, setTodoListItem] = useState<string>('');
@@ -51,18 +51,40 @@ export default function TodoList({ initialItems }: TodoListProps) {
     );
   }
 
-  function updateTodoItem(
+  async function updateTodoItem(
     itemIndex: number,
     event: React.ChangeEvent<HTMLInputElement>
   ) {
     const { value } = event.target;
-    setListItems((prevListItems) =>
-      prevListItems.map((item) =>
-        item.id === listItems[itemIndex].id
-          ? { ...item, listItem: value }
-          : item
-      )
-    );
+    const itemId = listItems[itemIndex].id;
+
+    try {
+      const updatedItemResult = await updateItem(itemId, value);
+
+      // Check if the result contains an error
+      if (updatedItemResult && 'error' in updatedItemResult) {
+        console.error('Failed to update item:', updatedItemResult.error);
+        return; // Exit early on error
+      }
+
+      const updatedItem = updatedItemResult as TodoItemResult;
+
+      setListItems((prevListItems) =>
+        prevListItems.map((item) =>
+          item.id === itemId
+            ? {
+                ...item,
+                updatedItem: updatedItem.updatedItem,
+                completed: updatedItem.completed,
+                reveal: updatedItem.reveal,
+              }
+            : item
+        )
+      );
+    } catch (error) {
+      console.error('Failed to add item:', error);
+      return { error: 'Failed to add list item. Please try again.' };
+    }
   }
 
   function checkCompleteItem(
