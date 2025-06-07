@@ -79,3 +79,5 @@ export async function updateItem(
     return { error: 'Failed to add user. Please try again.' };
   }
 }
+
+// A function to delete an item from the database by its ID and return the updated list of items after deletion. This function is used in the removeTodoItem function in TodoList.tsx. It takes the itemId as a parameter and returns a Promise that resolves to an array of TodoItemResult objects. If the deletion is successful, it returns the updated list of items. If there's an error, it logs the error and returns an empty array.

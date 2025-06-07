@@ -78,7 +78,7 @@ export default function TodoList({ initialItems }: TodoListProps) {
     // Hide input fields
     setListItems((prevListItems) =>
       prevListItems.map((item) =>
-        item.id == editingItemId ? { ...item, reveal: false } : item
+        item.id === editingItemId ? { ...item, reveal: false } : item
       )
     );
   }

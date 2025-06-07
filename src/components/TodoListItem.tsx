@@ -1,6 +1,5 @@
 type TodoListItem = {
   itemReveal: boolean;
-  // itemIndexValue: number;
   itemValue: string;
   itemId: number;
   itemName: string;
@@ -13,7 +12,6 @@ type TodoListItem = {
 
 export default function TodoListItem({
   itemReveal,
-  // itemIndexValue,
   itemValue,
   itemId,
   itemName,
