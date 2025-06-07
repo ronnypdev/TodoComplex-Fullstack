@@ -15,8 +15,72 @@ export default function TodoList({ initialItems }: TodoListProps) {
   const [listItems, setListItems] = useState<TodoItem[]>(initialItems);
   const [itemChecked, setItemChecked] = useState<boolean>(true);
 
-  function handleTodoItemChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setTodoListItem(event.target.value);
+  // Add these new state variables for editing the list item
+  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingValue, setEditingValue] = useState<string>('');
+
+  // Start editing an Item
+  function startEditingItem(itemId: number) {
+    const item = listItems.find((item) => item.id === itemId);
+    if (item) {
+      setEditingItemId(itemId);
+      setEditingValue(item.updatedItem);
+      // Toggle reveal state
+      setListItems((prevListItems) =>
+        prevListItems.map((item) =>
+          item.id === itemId ? { ...item, reveal: true } : item
+        )
+      );
+    }
+  }
+
+  function handleEditingChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setEditingValue(event.target.value);
+  }
+
+  // Save the edited item (database call)
+  async function saveEditedItem(itemId: number) {
+    try {
+      const updatedItemResult = await updateItem(itemId, editingValue);
+
+      // Check if the result contains an error
+      if (updatedItemResult && 'error' in updatedItemResult) {
+        console.error('Failed to update item:', updatedItemResult.error);
+        return; // Exit early on error
+      }
+
+      const updatedItem = updatedItemResult as TodoItemResult;
+
+      setListItems((prevListItems) =>
+        prevListItems.map((item) =>
+          item.id === itemId
+            ? {
+                ...item,
+                updatedItem: updatedItem.updatedItem,
+                completed: updatedItem.completed,
+                reveal: false,
+              }
+            : item
+        )
+      );
+      setEditingItemId(null);
+      setEditingValue('');
+    } catch (error) {
+      console.error('Failed to add item:', error);
+      return { error: 'Failed to add list item. Please try again.' };
+    }
+  }
+
+  //Cancel editing
+  function cancelEditing() {
+    setEditingItemId(null);
+    setEditingValue('');
+    // Hide input fields
+    setListItems((prevListItems) =>
+      prevListItems.map((item) =>
+        item.id == editingItemId ? { ...item, reveal: false } : item
+      )
+    );
   }
 
   async function addTodoItem() {
@@ -37,54 +101,14 @@ export default function TodoList({ initialItems }: TodoListProps) {
     }
   }
 
+  function editTodoItem(itemId: number) {
+    startEditingItem(itemId);
+  }
+
   function removeTodoItem(index: number) {
     setListItems((prevListItems) =>
       prevListItems.filter((item) => item.id !== listItems[index].id)
     );
-  }
-
-  function editTodoItem(itemId: number) {
-    setListItems((prevListItems) =>
-      prevListItems.map((item) =>
-        item.id === itemId ? { ...item, reveal: !item.reveal } : item
-      )
-    );
-  }
-
-  async function updateTodoItem(
-    itemIndex: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
-    const { value } = event.target;
-    const itemId = listItems[itemIndex].id;
-
-    try {
-      const updatedItemResult = await updateItem(itemId, value);
-
-      // Check if the result contains an error
-      if (updatedItemResult && 'error' in updatedItemResult) {
-        console.error('Failed to update item:', updatedItemResult.error);
-        return; // Exit early on error
-      }
-
-      const updatedItem = updatedItemResult as TodoItemResult;
-
-      setListItems((prevListItems) =>
-        prevListItems.map((item) =>
-          item.id === itemId
-            ? {
-                ...item,
-                updatedItem: updatedItem.updatedItem,
-                completed: updatedItem.completed,
-                reveal: updatedItem.reveal,
-              }
-            : item
-        )
-      );
-    } catch (error) {
-      console.error('Failed to add item:', error);
-      return { error: 'Failed to add list item. Please try again.' };
-    }
   }
 
   function checkCompleteItem(
@@ -119,7 +143,7 @@ export default function TodoList({ initialItems }: TodoListProps) {
           <input
             className="w-full max-w-full py-[23px] pr-5 pl-[47px] bg-white shadow-(--light-box-shadow) rounded-[5px] placeholder:text-shade-grey"
             type="text"
-            onChange={handleTodoItemChange}
+            onChange={handleEditingChange}
             value={todoLisItem}
             name="listInput"
             id="listInput"
@@ -151,11 +175,14 @@ export default function TodoList({ initialItems }: TodoListProps) {
                   />
                   <TodoListItem
                     itemReveal={item.reveal || false}
-                    itemIndexValue={index}
                     itemValue={item.updatedItem}
                     itemId={item.id}
                     itemName={item.updatedItem}
-                    todoListItemData={updateTodoItem}
+                    todoListItemData={handleEditingChange}
+                    onEnterPress={saveEditedItem}
+                    onEscapePress={cancelEditing}
+                    isEditing={editingItemId === item.id}
+                    editingValue={editingValue}
                   />
                 </div>
                 <div className="hidden group-hover/controls:flex group-hover/controls:justify-center group-hover/controls:items-center">
@@ -173,7 +200,7 @@ export default function TodoList({ initialItems }: TodoListProps) {
                   />
                 </div>
               </div>
-            ))}
+            ))}{' '}
           </div>
 
           <div className="controls border-t border-t-light-grey h-[15%] flex justify-between items-center px-[14px]">
