@@ -133,9 +133,24 @@ export default function TodoList({ initialItems }: TodoListProps) {
   }
 
   function clearCompletedItems() {
-    setListItems((prevListItems) =>
-      prevListItems.filter((item) => !item.completed)
+    const completedCount = listItems.filter((item) => item.completed).length;
+
+    // Don't do anything if no completed items
+    if (completedCount === 0) return;
+
+    // Show confirmation dialog
+    const confirmed = window.confirm(
+      `Hide ${completedCount} completed item${
+        completedCount > 1 ? 's' : ''
+      }? They will reappear on page refresh.`
     );
+
+    // Only proceed if user confirmed
+    if (confirmed) {
+      setListItems((prevListItems) =>
+        prevListItems.filter((item) => !item.completed)
+      );
+    }
   }
 
   return (
@@ -225,9 +240,18 @@ export default function TodoList({ initialItems }: TodoListProps) {
               )}
             </ul>
             <p
-              className="text-shade-grey cursor-pointer"
-              onClick={() => clearCompletedItems()}>
-              Clear Completed
+              className={`transition-colors ${
+                listItems.some((item) => item.completed)
+                  ? 'text-shade-grey cursor-pointer hover:text-primary-blue'
+                  : 'text-light-grey cursor-not-allowed'
+              }`}
+              onClick={
+                listItems.some((item) => item.completed)
+                  ? clearCompletedItems
+                  : undefined
+              }>
+              Clear Completed (
+              {listItems.filter((item) => item.completed).length})
             </p>
           </div>
         </div>
