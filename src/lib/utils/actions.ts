@@ -81,3 +81,20 @@ export async function updateItem(
 }
 
 // A function to delete an item from the database by its ID and return the updated list of items after deletion. This function is used in the removeTodoItem function in TodoList.tsx. It takes the itemId as a parameter and returns a Promise that resolves to an array of TodoItemResult objects. If the deletion is successful, it returns the updated list of items. If there's an error, it logs the error and returns an empty array.
+
+export async function deleteItem(itemId: number): Promise<TodoItemResult[]> {
+  try {
+    // Delete the item from the database
+    await db.delete(listItemTable).where(eq(listItemTable.id, itemId));
+    // Fetch the updated list of items
+    const updatedItems = await db.select().from(listItemTable);
+    return updatedItems.map((item) => ({
+      ...item,
+      completed: item.completed ?? false,
+      reveal: item.reveal ?? false,
+    }));
+  } catch (error) {
+    console.error('Failed to delete item:', error);
+    return [];
+  }
+}

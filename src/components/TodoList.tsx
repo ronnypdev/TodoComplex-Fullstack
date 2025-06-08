@@ -8,7 +8,7 @@ import PencilIcon from './icons/PencilIcon';
 
 import TodoListItem from './TodoListItem';
 import { TodoItem, TodoListProps, TodoItemResult } from '@/types';
-import { addItem, updateItem } from '@/lib/utils/actions';
+import { addItem, updateItem, deleteItem } from '@/lib/utils/actions';
 
 export default function TodoList({ initialItems }: TodoListProps) {
   const [todoLisItem, setTodoListItem] = useState<string>('');
@@ -105,10 +105,13 @@ export default function TodoList({ initialItems }: TodoListProps) {
     startEditingItem(itemId);
   }
 
-  function removeTodoItem(index: number) {
-    setListItems((prevListItems) =>
-      prevListItems.filter((item) => item.id !== listItems[index].id)
-    );
+  async function removeTodoItem(itemId: number) {
+    try {
+      const deletedItems = await deleteItem(itemId);
+      setListItems(deletedItems);
+    } catch (error) {
+      console.error('Failed to delete item:', error);
+    }
   }
 
   function checkCompleteItem(
@@ -195,7 +198,7 @@ export default function TodoList({ initialItems }: TodoListProps) {
                   )}
                   <CrossIcon
                     fillColor="#494C6B"
-                    toggleOnClick={() => removeTodoItem(index)}
+                    toggleOnClick={() => removeTodoItem(item.id)}
                     hoverState="hover:fill-midGrey cursor-pointer mr-2"
                   />
                 </div>
