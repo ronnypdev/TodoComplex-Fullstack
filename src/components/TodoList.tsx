@@ -1,23 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import CrossIcon from './icons/CrossIcon';
 import OvalIcon from './icons/OvalIcon';
 import PencilIcon from './icons/PencilIcon';
 
 import TodoListItem from './TodoListItem';
-import { TodoItem, TodoListProps, TodoItemResult } from '@/types';
+import { TodoItem, TodoListProps, TodoItemResult, FilterType } from '@/types';
 import { addItem, updateItem, deleteItem } from '@/lib/utils/actions';
 
 export default function TodoList({ initialItems }: TodoListProps) {
   const [todoLisItem, setTodoListItem] = useState<string>('');
   const [listItems, setListItems] = useState<TodoItem[]>(initialItems);
   const [itemChecked, setItemChecked] = useState<boolean>(true);
-
   // Add these new state variables for editing the list item
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState<string>('');
+  // Use this state variable for the filter type feature
+  const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
+
+  console.log('Current filter:', currentFilter);
+
+  const displayedItems = useMemo(() => {
+    switch (currentFilter) {
+      case 'active':
+        return listItems.filter((item) => !item.completed);
+      case 'completed':
+        return listItems.filter((item) => item.completed);
+      default:
+        return listItems;
+    }
+  }, [listItems, currentFilter]);
 
   // Start editing an Item
   function startEditingItem(itemId: number) {
