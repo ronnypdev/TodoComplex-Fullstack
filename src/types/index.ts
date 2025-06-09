@@ -5,7 +5,6 @@ export interface TodoItem {
   completed: boolean | null; // Allow null
   reveal: boolean | null; // Allow null
   error?: string;
-  // filterNames?: string[];
 }
 
 export type TodoItemResult = TodoItem;
@@ -18,3 +17,5 @@ export interface ActionResult<T> {
 export interface TodoListProps {
   initialItems: TodoItem[];
 }
+
+export type FilterType = 'all' | 'active' | 'completed';
