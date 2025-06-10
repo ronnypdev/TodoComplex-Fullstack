@@ -6,7 +6,7 @@ export default async function Home() {
   const initialItems = await fetchItems();
 
   return (
-    <main className="h-full flex-col justify-center">
+    <main className="h-full flex-col justify-center dark:bg-midnight-black">
       <Header />
       <div className="max-container relative bottom-[170px] md:bottom-32">
         <TodoList initialItems={initialItems} />
