@@ -20,8 +20,6 @@ export default function TodoList({ initialItems }: TodoListProps) {
   // Use this state variable for the filter type feature
   const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
 
-  console.log('Current filter:', currentFilter);
-
   const displayedItems = useMemo(() => {
     switch (currentFilter) {
       case 'active':
@@ -32,6 +30,21 @@ export default function TodoList({ initialItems }: TodoListProps) {
         return listItems;
     }
   }, [listItems, currentFilter]);
+
+  const activeItemsCount = listItems.filter((item) => !item.completed).length;
+
+  // Empty state handling
+  const shouldShowEmptyMessage =
+    displayedItems.length === 0 && listItems.length > 0;
+  const emptyMessage = {
+    active: 'No active items',
+    completed: 'No completed items',
+    all: '', // Never show empty message for 'all'
+  }[currentFilter];
+
+  function handleFilterChange(filter: FilterType) {
+    setCurrentFilter(filter);
+  }
 
   // Start editing an Item
   function startEditingItem(itemId: number) {
@@ -50,6 +63,10 @@ export default function TodoList({ initialItems }: TodoListProps) {
 
   function handleEditingChange(event: React.ChangeEvent<HTMLInputElement>) {
     setEditingValue(event.target.value);
+  }
+
+  function handleTodoItemChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setTodoListItem(event.target.value);
   }
 
   // Save the edited item (database call)
@@ -175,7 +192,7 @@ export default function TodoList({ initialItems }: TodoListProps) {
           <input
             className="w-full max-w-full py-[23px] pr-5 pl-[47px] bg-white shadow-(--light-box-shadow) rounded-[5px] placeholder:text-shade-grey"
             type="text"
-            onChange={handleEditingChange}
+            onChange={handleTodoItemChange}
             value={todoLisItem}
             name="listInput"
             id="listInput"
@@ -184,70 +201,95 @@ export default function TodoList({ initialItems }: TodoListProps) {
         </label>
         <div className="w-full h-full max-w-full bg-white rounded-[5px] shadow-(--light-box-shadow)">
           <div className="h-[85%] overflow-y-auto min-h-[auto]">
-            {listItems.map((item, index) => (
-              <div
-                key={item.id}
-                className={`p-6 ${
-                  index === 0
-                    ? 'border-t first:border-0'
-                    : 'border-t border-t-light-grey'
-                }
+            {shouldShowEmptyMessage ? (
+              <div className="p-6 text-center text-shade-grey">
+                {emptyMessage}
+              </div>
+            ) : (
+              displayedItems.map((item, index) => (
+                <div
+                  key={item.id}
+                  className={`p-6 ${
+                    index === 0
+                      ? 'border-t first:border-0'
+                      : 'border-t border-t-light-grey'
+                  }
                     flex justify-between items-center group/controls`}>
-                <div className="todo-flex-col">
-                  <input
-                    className="cursor-pointer checkbox-round relative right-[11px] bottom-[2px]"
-                    type="checkbox"
-                    id={item.id.toString()}
-                    checked={item.completed || false}
-                    name={item.updatedItem}
-                    onChange={(event) => {
-                      checkCompleteItem(item.id, event);
-                      setItemChecked(!itemChecked);
-                    }}
-                  />
-                  <TodoListItem
-                    itemReveal={item.reveal || false}
-                    itemValue={item.updatedItem}
-                    itemId={item.id}
-                    itemName={item.updatedItem}
-                    todoListItemData={handleEditingChange}
-                    onEnterPress={saveEditedItem}
-                    onEscapePress={cancelEditing}
-                    isEditing={editingItemId === item.id}
-                    editingValue={editingValue}
-                  />
-                </div>
-                <div className="hidden group-hover/controls:flex group-hover/controls:justify-center group-hover/controls:items-center">
-                  {!item.completed && (
-                    <PencilIcon
+                  <div className="todo-flex-col">
+                    <input
+                      className="cursor-pointer checkbox-round relative right-[11px] bottom-[2px]"
+                      type="checkbox"
+                      id={item.id.toString()}
+                      checked={item.completed || false}
+                      name={item.updatedItem}
+                      onChange={(event) => {
+                        checkCompleteItem(item.id, event);
+                        setItemChecked(!itemChecked);
+                      }}
+                    />
+                    <TodoListItem
+                      itemReveal={item.reveal || false}
+                      itemValue={item.updatedItem}
+                      itemId={item.id}
+                      itemName={item.updatedItem}
+                      todoListItemData={handleEditingChange}
+                      onEnterPress={saveEditedItem}
+                      onEscapePress={cancelEditing}
+                      isEditing={editingItemId === item.id}
+                      editingValue={editingValue}
+                    />
+                  </div>
+                  <div className="hidden group-hover/controls:flex group-hover/controls:justify-center group-hover/controls:items-center">
+                    {!item.completed && (
+                      <PencilIcon
+                        fillColor="#494C6B"
+                        toggleOnClick={() => editTodoItem(item.id)}
+                        hoverState="hover:fill-midGrey cursor-pointer mr-2"
+                      />
+                    )}
+                    <CrossIcon
                       fillColor="#494C6B"
-                      toggleOnClick={() => editTodoItem(item.id)}
+                      toggleOnClick={() => removeTodoItem(item.id)}
                       hoverState="hover:fill-midGrey cursor-pointer mr-2"
                     />
-                  )}
-                  <CrossIcon
-                    fillColor="#494C6B"
-                    toggleOnClick={() => removeTodoItem(item.id)}
-                    hoverState="hover:fill-midGrey cursor-pointer mr-2"
-                  />
+                  </div>
                 </div>
-              </div>
-            ))}{' '}
+              ))
+            )}{' '}
           </div>
 
           <div className="controls border-t border-t-light-grey h-[15%] flex justify-between items-center px-[14px]">
             <p className="text-shade-grey">
-              <span>{listItems.filter((item) => !item.completed).length}</span>{' '}
-              items left
+              <span>{activeItemsCount}</span> items left
             </p>
             <ul className="flex justify-between items-center">
               {listItems.length > 0 && (
                 <>
-                  <li className="ml-4 cursor-pointer text-primary-blue">All</li>
-                  <li className="ml-4 cursor-pointer text-shade-grey">
+                  <li
+                    className={`ml-4 cursor-pointer ${
+                      currentFilter === 'all'
+                        ? 'text-primary-blue'
+                        : 'text-shade-grey hover:text-primary-blue'
+                    }`}
+                    onClick={() => handleFilterChange('all')}>
+                    All
+                  </li>
+                  <li
+                    className={`ml-4 cursor-pointer ${
+                      currentFilter === 'active'
+                        ? 'text-primary-blue'
+                        : 'text-shade-grey hover:text-primary-blue'
+                    }`}
+                    onClick={() => handleFilterChange('active')}>
                     Active
                   </li>
-                  <li className="ml-4 cursor-pointer text-shade-grey">
+                  <li
+                    className={`ml-4 cursor-pointer ${
+                      currentFilter === 'completed'
+                        ? 'text-primary-blue'
+                        : 'text-shade-grey hover:text-primary-blue'
+                    }`}
+                    onClick={() => handleFilterChange('completed')}>
                     Completed
                   </li>
                 </>
