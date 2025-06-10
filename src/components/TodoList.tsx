@@ -186,7 +186,9 @@ export default function TodoList({ initialItems }: TodoListProps) {
 
   return (
     <>
-      <form className="w-[540px] h-[540px] m-auto" onSubmit={submitTodoData}>
+      <form
+        className="w-[540px] h-[540px] m-auto max-w-full p-5 md:p-0"
+        onSubmit={submitTodoData}>
         <label htmlFor="listInput" className="relative mb-8 block">
           <OvalIcon />
           <input
@@ -262,7 +264,7 @@ export default function TodoList({ initialItems }: TodoListProps) {
             <p className="text-shade-grey">
               <span>{activeItemsCount}</span> items left
             </p>
-            <ul className="flex justify-between items-center">
+            <ul className="hidden md:flex justify-between items-center">
               {listItems.length > 0 && (
                 <>
                   <li
@@ -312,6 +314,41 @@ export default function TodoList({ initialItems }: TodoListProps) {
           </div>
         </div>
       </form>
+      <div className="mobile-controls bg-white w-[327px] h-14 max-w-full mt-4 md:hidden flex justify-center items-center px-[14px] rounded-[5px] relative bottom-[-93px] my-0 mx-auto shadow-(--light-box-shadow)">
+        <ul className="flex justify-between items-center">
+          {listItems.length > 0 && (
+            <>
+              <li
+                className={`ml-4 cursor-pointer ${
+                  currentFilter === 'all'
+                    ? 'text-primary-blue'
+                    : 'text-shade-grey hover:text-primary-blue'
+                }`}
+                onClick={() => handleFilterChange('all')}>
+                All
+              </li>
+              <li
+                className={`ml-4 cursor-pointer ${
+                  currentFilter === 'active'
+                    ? 'text-primary-blue'
+                    : 'text-shade-grey hover:text-primary-blue'
+                }`}
+                onClick={() => handleFilterChange('active')}>
+                Active
+              </li>
+              <li
+                className={`ml-4 cursor-pointer ${
+                  currentFilter === 'completed'
+                    ? 'text-primary-blue'
+                    : 'text-shade-grey hover:text-primary-blue'
+                }`}
+                onClick={() => handleFilterChange('completed')}>
+                Completed
+              </li>
+            </>
+          )}
+        </ul>
+      </div>
     </>
   );
 }

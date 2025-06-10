@@ -8,13 +8,8 @@ export default async function Home() {
   return (
     <main className="h-full flex-col justify-center">
       <Header />
-      <div className="max-container relative bottom-32">
+      <div className="max-container relative bottom-[170px] md:bottom-32">
         <TodoList initialItems={initialItems} />
-      </div>
-      <div className="text-center">
-        <p className="text-sm leading-normal font-normal not-italic -tracking[0.194px] text-shade-grey">
-          Drag and drop to reorder list
-        </p>
       </div>
     </main>
   );
