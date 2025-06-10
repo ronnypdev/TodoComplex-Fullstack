@@ -1,38 +1,46 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 * {
   box-sizing: border-box;
 }
 
 @theme {
+  --font-josefin-sans: 'Josefin Sans', system-ui, sans-serif;
 
-  --font-josefin-sans: "Josefin Sans", system-ui, sans-serif;
+  --light-linear-gradient: linear-gradient(
+    132deg,
+    rgba(85, 221, 255, 1) 17%,
+    rgba(192, 88, 243, 1) 86%
+  );
+  --dark-linear-gradient: linear-gradient(
+    158deg,
+    rgba(55, 16, 189, 1) 35%,
+    rgba(164, 35, 149, 1) 100%
+  );
+  --light-box-shadow: 0px 35px 50px -15px rgba(194, 195, 214, 0.5);
 
-  --light-linear-gradient: linear-gradient(132deg, rgba(85, 221, 255, 1) 17%, rgba(192, 88, 243, 1) 86%);
-  --dark-linear-gradient: linear-gradient(158deg, rgba(55, 16, 189, 1) 35%, rgba(164, 35, 149, 1) 100%);
-  --light-box-shadow: 0px 35px 50px -15px rgba(194, 195, 214, 0.50);
-
-  --color-primary-blue: #3A7CFD;
-  --color-white: #FFFFFF;
-  --color-light-grey: #E3E4F1;
-  --color-pale-grey: #C8CBE7;
-  --color-grey: #5B5E7E;
-  --color-mid-grey: #494C6B;
-  --color-dark-grey: #393A4B;
-  --color-space-grey: #4D5067;
+  --color-primary-blue: #3a7cfd;
+  --color-white: #ffffff;
+  --color-light-grey: #e3e4f1;
+  --color-pale-grey: #c8cbe7;
+  --color-grey: #5b5e7e;
+  --color-mid-grey: #494c6b;
+  --color-dark-grey: #393a4b;
+  --color-space-grey: #4d5067;
   --color-light-space-grey: #767992;
-  --color-shade-grey: #9495A5;
-  --color-space-black: #25273D;
+  --color-shade-grey: #9495a5;
+  --color-space-black: #25273d;
   --color-midnight-black: #171823;
   --background: #ffffff;
   --foreground: #171717;
-
 
   --hero-desktop-dark: url('/bg-desktop-dark.jpg');
   --hero-desktop-light: url('/bg-desktop-light.jpg');
   --hero-mobile-dark: url('/bg-mobile-dark.jpg');
   --hero-mobile-light: url('/bg-mobile-light.jpg');
 }
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 html,
 body {
@@ -51,11 +59,11 @@ body {
 }
 
 .oval-icon {
-  @apply w-6 h-6 rounded-full border border-(--color-light-grey) absolute left-3 top-[16px]
+  @apply w-6 h-6 rounded-full border border-(--color-light-grey) absolute left-3 top-[16px];
 }
 
 .todo-flex-col {
-  @apply flex justify-center items-center
+  @apply flex justify-center items-center;
 }
 
 .max-container {
@@ -89,13 +97,13 @@ body {
   filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#55ddff", endColorstr="#c058f3", GradientType=1);
 }
 
-.checkbox-round:checked+label {
+.checkbox-round:checked + label {
   text-decoration: line-through;
   color: var(--color-light-grey);
 }
 
 .checkbox-round:checked::before {
-  content: " ";
+  content: ' ';
   display: inline-block;
   color: var(--color-white);
   transform: rotate(45deg);
